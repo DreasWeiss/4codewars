@@ -14,6 +14,7 @@ async function run(url) {
   // const title = await page.evaluate(()=> document.title);
   // console.log(title);
 
+  // * INFO
   // parse info from codewars
   const title = await page.evaluate(
     () => document.querySelector("h4").innerText
@@ -26,15 +27,14 @@ async function run(url) {
   const text = await page.evaluate(
     () => document.querySelector(".markdown").innerHTML
   );
-  const readme = `
-  # ${title}
-  ${kuy} kuy
-  [link to kata](${url})
-  <br>
-  [my solution]('./kata.js')
-  ${'\n'}
-  ${text}
-  `
+  const readme = `# ${title}
+${kyu} kyu
+[link to kata](${url})
+<br/>
+[my solution]('./kata.js')
+<br/>
+<br/>
+${text}`;
 
   // create dir
   const dirPath = `./${titleCamelCase}`;
@@ -47,13 +47,17 @@ async function run(url) {
   }
   // create md file
   const filePath = `${dirPath}/README.md`;
-  fs.writeFile(filePath, text, (err) => {
+  fs.writeFile(filePath, readme, (err) => {
     if (err) {
       console.error("An error occurred while writing the file:", err);
     } else {
       console.log("Markdown file created successfully!");
     }
   });
+
+  //TODO: parse and create task.js file
+  //TODO: output row in mdTable
+
 
   console.log(title);
   console.log(titleCamelCase);
