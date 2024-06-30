@@ -15,7 +15,7 @@ async function run(url) {
   // console.log(title);
 
   // * INFO
-  // parse info from codewars
+  // parse info from codewars with puppeteer
   const title = await page.evaluate(
     () => document.querySelector("h4").innerText
   );
@@ -41,22 +41,24 @@ ${text}`;
 
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath);
-    console.log("Директория успешно создана!");
+    console.log(`Directory: ${titleCamelCase} - created successfully`);
   } else {
-    console.log("Директория уже существует.");
+    console.log(`Directory: ${titleCamelCase} - already exists.`);
   }
-  // create md file
+  // create md file - kata's task info
   const filePath = `${dirPath}/README.md`;
   fs.writeFile(filePath, readme, (err) => {
     if (err) {
       console.error("An error occurred while writing the file:", err);
     } else {
-      console.log("Markdown file created successfully!");
+      console.log("Kata's info file created successfully!");
     }
   });
 
+
   //TODO: parse and create task.js file
-  //TODO: output row in mdTable
+  //TODO: output row in mdTable mainREADME
+  //TODO: output row in mdTable kataNumber
 
 
   console.log(title);
