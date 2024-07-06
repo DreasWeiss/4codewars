@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
+const path = require('path');
 const camelCase = require("./modules/camelCase");
 const { dir } = require("console");
 
@@ -47,8 +48,8 @@ ${text}`;
     console.log(`Directory: ${titleCamelCase} - already exists.`);
   }
   // create md file - kata's task info
-  const readmePath = `${dirPath}/README.md`;
-  fs.writeFile(readmePath, readme, (err) => {
+  const kataReadmePath = `${dirPath}/README.md`;
+  fs.writeFile(kataReadmePath, readme, (err) => {
     if (err) {
       console.error("An error occurred while writing the file:", err);
     } else {
@@ -56,18 +57,17 @@ ${text}`;
     }
   });
   
-  //TODO: parse and create kata.js file => file name : kata.js
   // parse func to kata.js
-  const kata = await page.evaluate(()=> {
+  const kataJS = await page.evaluate(()=> {
     const parentElement = document.querySelector('.CodeMirror-code');
     if (!parentElement) return [];
     const pres = parentElement.querySelectorAll('pre');
     return Array.from(pres).map(pre=>pre.textContent).join('\n');
   });
-  console.log(kata);
+
   // create kata.js with katas func
   const kataJsPath = `${dirPath}/kata.js`;
-  fs.writeFile(kataJsPath, kata, (err) => {
+  fs.writeFile(kataJsPath, kataJS, (err) => {
     if (err) {
       console.error("An error occurred while writing the file:", err);
     } else {
@@ -84,72 +84,26 @@ ${text}`;
   console.log(kataRow);
 
   // paste kataRow into mdTable
-  /* 
-  Для вставки новой строки в Markdown таблицу в файл, можно использовать встроенные методы модуля fs для чтения и записи файлов, а также манипуляции строками в Node.js. Вот пошаговое руководство, как это сделать:
-  
-Шаги:
-Прочитать содержимое Markdown файла.
-Найти строку с таблицей и добавить новую строку после разделителя.
-Записать обновлённое содержимое обратно в файл.
-Пример:
-Создайте Markdown файл для тестирования:
+  const readmePath =  path.join(__dirname, 'README.md');
 
-Создайте файл example.md с содержимым:
-
-markdown
-Copy code
-| Kata link|kyu|language|path|my solution|
-|---|----|---|---|---|
-[Temperature converter](https://www.codewars.com/kata/54ce9497975ca65e1a0008c6/train/javascript)|6|JS|[path](./katas/temperatureConverter/)|[solution](./katas/temperatureConverter/kata.js)|
-[Chuck Norris VII - True or False? (Beginner)](https://www.codewars.com/kata/570669d8cb7293a2d1001473/train/javascript)|8|JS|[path](./katas/chuckNorrisViiTrueOrFalseBeginner/)|[solution](./katas/chuckNorrisViiTrueOrFalseBeginner/kata.js)|
-Создайте файл insertRow.js со следующим содержимым:
-
-javascript
-Copy code
-const fs = require('fs');
-const path = require('path');
-
-// Путь к Markdown файлу
-const filePath = path.join(__dirname, 'example.md');
-
-// Новая строка, которую нужно вставить
-const newRow = `[New Kata](https://www.codewars.com/kata/1234567890/train/javascript)|5|JS|[path](./katas/newKata/)|[solution](./katas/newKata/kata.js)|`;
-
-// Читаем содержимое файла
-fs.readFile(filePath, 'utf8', (err, data) => {
-  if (err) {
-    return console.error('Ошибка чтения файла:', err);
-  }
-
-  // Разделяем содержимое на строки
-  const lines = data.split('\n');
-
-  // Находим индекс строки с разделителем таблицы
-  const separatorIndex = lines.findIndex(line => line.trim() === '|---|----|---|---|---|');
-
-  if (separatorIndex === -1) {
-    return console.error('Разделитель таблицы не найден.');
-  }
-
-  // Вставляем новую строку после строки с разделителем
-  lines.splice(separatorIndex + 1, 0, newRow);
-
-  // Объединяем строки обратно в одно содержимое
-  const updatedData = lines.join('\n');
-
-  // Записываем обновлённое содержимое обратно в файл
-  fs.writeFile(filePath, updatedData, 'utf8', (err) => {
-    if (err) {
-      return console.error('Ошибка записи файла:', err);
+  fs.readFile(readmePath, 'utf8', (err,data) => {
+    if (err) { 
+      return console.error(`err with reading file: ${readmePath}`, err);
     }
-    console.log('Новая строка успешно вставлена в таблицу.');
-  });
-});
-
-  */
-
-  console.log(title);
-  console.log(titleCamelCase);
+    const lines = data.split('\n');
+    const separatorIndex = lines.findIndex(line => line.trim() === '|---|----|---|---|---|');
+    if (separatorIndex === -1) {
+      return console.error('Table separator was not found');
+    }
+    lines.splice(separatorIndex + 1, 0, kataRow);
+    const updatedData = lines.join('\n');
+    fs.writeFile(readmePath, updatedData, 'utf8', (err) => {
+      if (err) {
+        return console.error('Err write file:', err);
+      }
+      console.log(`${kataRow} - succesfully added in ${readmePath}`);
+    });
+  })
 
   await browser.close();
 }
