@@ -107,6 +107,10 @@ ${text}`;
 
   await browser.close();
 }
-let url =
-  "https://www.codewars.com/kata/58d5b39b1c0402c5f7002e0d/train/javascript";
+const args = process.argv.slice(2);
+if (args.length === 0) {
+  console.error('pls, incert URL');
+  process.exit(1);
+}
+const url = args[0];
 run(url);
