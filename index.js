@@ -37,16 +37,16 @@ ${kyu} kyu
 ${text}`;
 
   // create dir for a new KATA
-  const dirPath = `./${titleCamelCase}`;
+  const kataDirPath = `./${titleCamelCase}`;
 
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath);
+  if (!fs.existsSync(kataDirPath)) {
+    fs.mkdirSync(kataDirPath);
     console.log(`Directory: ${titleCamelCase} - created successfully`);
   } else {
     console.log(`Directory: ${titleCamelCase} - already exists.`);
   }
   // create md file - kata's task info
-  const kataReadmePath = `${dirPath}/README.md`;
+  const kataReadmePath = `${kataDirPath}/README.md`;
   fs.writeFile(kataReadmePath, readme, (err) => {
     if (err) {
       console.error("An error occurred while writing the file:", err);
@@ -66,7 +66,7 @@ ${text}`;
   });
 
   // create kata.js with katas func
-  const kataJsPath = `${dirPath}/kata.js`;
+  const kataJsPath = `${kataDirPath}/kata.js`;
   fs.writeFile(kataJsPath, kataJS, (err) => {
     if (err) {
       console.error("An error occurred while writing the file:", err);
@@ -76,7 +76,7 @@ ${text}`;
   });
 
   // new row in katas mdTable
-  const kataRow = `|[${title}](${url})|${kyu}|JS|[path](${dirPath})|[solution](${dirPath}/kata.js)|`;
+  const kataRow = `|[${title}](${url})|${kyu}|JS|[path](${kataDirPath})|[solution](${kataDirPath}/kata.js)|`;
   console.log(kataRow);
 
   // paste kataRow into mdTable
