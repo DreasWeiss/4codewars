@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
-const path = require('path');
+const path = require("path");
 const camelCase = require("./modules/camelCase");
 const { dir } = require("console");
 
@@ -9,13 +9,6 @@ async function run(url) {
   const page = await browser.newPage();
   await page.goto(url);
 
-  // await page.screenshot({path:'example.png', fullPage: true});
-  // const html = await page.content();
-  // console.log(html);
-
-  // const title = await page.evaluate(()=> document.title);
-  // console.log(title);
-
   // * INFO
   // parse info from codewars with puppeteer
   const title = await page.evaluate(
@@ -23,7 +16,12 @@ async function run(url) {
   );
   const titleCamelCase = camelCase(title);
   const kyu = await page.evaluate(
-    () => +document.querySelector(".panel").querySelector("span").innerText.match(/\d+/).join()
+    () =>
+      +document
+        .querySelector(".panel")
+        .querySelector("span")
+        .innerText.match(/\d+/)
+        .join()
   );
 
   const text = await page.evaluate(
@@ -56,13 +54,15 @@ ${text}`;
       console.log("Kata's info file created successfully!");
     }
   });
-  
+
   // parse func to kata.js
-  const kataJS = await page.evaluate(()=> {
-    const parentElement = document.querySelector('.CodeMirror-code');
+  const kataJS = await page.evaluate(() => {
+    const parentElement = document.querySelector(".CodeMirror-code");
     if (!parentElement) return [];
-    const pres = parentElement.querySelectorAll('pre');
-    return Array.from(pres).map(pre=>pre.textContent).join('\n');
+    const pres = parentElement.querySelectorAll("pre");
+    return Array.from(pres)
+      .map((pre) => pre.textContent)
+      .join("\n");
   });
 
   // create kata.js with katas func
@@ -75,42 +75,59 @@ ${text}`;
     }
   });
 
-  //TODO: output row in mdTable kataNumber
-  // |[Jaden Casing Strings](https://www.codewars.com/kata/5390bac347d09b7da40006f6/train/javascript)|7|JS|[path](./katas/jadenCasingStrings/)|[solution](./katas/jadenCasingStrings/kata.js)|
-  // |[title](url)|kyu number|language|[path](path)|[solution](path/kata.js)|
-
   // new row in katas mdTable
-  const kataRow= `|[${title}](${url})|${kyu}|js|[path](${dirPath})|[solution](${dirPath}/kata.js)|`;
+  const kataRow = `|[${title}](${url})|${kyu}|JS|[path](${dirPath})|[solution](${dirPath}/kata.js)|`;
   console.log(kataRow);
 
   // paste kataRow into mdTable
-  const readmePath =  path.join(__dirname, 'README.md');
+  const readmePath = path.join(__dirname, "README.md");
 
-  fs.readFile(readmePath, 'utf8', (err,data) => {
-    if (err) { 
+  fs.readFile(readmePath, "utf8", (err, data) => {
+    if (err) {
       return console.error(`err with reading file: ${readmePath}`, err);
     }
-    const lines = data.split('\n');
-    const separatorIndex = lines.findIndex(line => line.trim() === '|---|----|---|---|---|');
+    const lines = data.split("\n");
+    const separatorIndex = lines.findIndex(
+      (line) => line.trim() === "|---|----|---|---|---|"
+    );
     if (separatorIndex === -1) {
-      return console.error('Table separator was not found');
+      return console.error("Table separator was not found");
     }
     lines.splice(separatorIndex + 1, 0, kataRow);
-    const updatedData = lines.join('\n');
-    fs.writeFile(readmePath, updatedData, 'utf8', (err) => {
+    const updatedData = lines.join("\n");
+    fs.writeFile(readmePath, updatedData, "utf8", (err) => {
       if (err) {
-        return console.error('Err write file:', err);
+        return console.error("Err write file:", err);
       }
       console.log(`${kataRow} - succesfully added in ${readmePath}`);
     });
-  })
+  });
 
   await browser.close();
 }
 const args = process.argv.slice(2);
 if (args.length === 0) {
-  console.error('pls, incert URL');
+  console.error("pls, incert URL");
   process.exit(1);
 }
 const url = args[0];
 run(url);
+
+// TODO: settings:
+// - codewarsDir path
+// - creating files with info and dirs
+/*
+structure:
+./:
+dir : katas
+file: 1kyu.md
+file: 2kyu.md
+file: 3kyu.md
+file: 4kyu.md
+file: 5kyu.md
+file: 6kyu.md
+file: 7kyu.md
+file: 8kyu.md
+file: README.md
+file: beta.md
+*/
