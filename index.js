@@ -37,7 +37,7 @@ ${kyu} kyu
 ${text}`;
 
   // create dir for a new KATA
-  const kataDirPath = `./${titleCamelCase}`;
+  const kataDirPath = `./katas/${titleCamelCase}`;
 
   if (!fs.existsSync(kataDirPath)) {
     fs.mkdirSync(kataDirPath);
@@ -80,7 +80,8 @@ ${text}`;
   console.log(kataRow);
 
   // paste kataRow into mdTable
-  const readmePath = path.join(__dirname, "README.md");
+  const readmePath = path.join(process.cwd(), "README.md");
+  console.log(readmePath);
 
   fs.readFile(readmePath, "utf8", (err, data) => {
     if (err) {
