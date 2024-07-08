@@ -114,6 +114,9 @@ if (args.length === 0) {
 const url = args[0];
 run(url);
 
+// TODO: if kata is beta
+// TODO: different languages
+// TODO: refactoring
 // TODO: settings:
 // - codewarsDir path
 // - creating files with info and dirs
