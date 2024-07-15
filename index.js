@@ -1,10 +1,12 @@
 const parse = require('./modules/parse.js');
 const kataDir = require('./modules/kataDir.js');
+const updateTable = require('./modules/updateTable.js');
 
 async function codewarsKata(url) {
   try {
     let kataInfo = await parse(url);
-    await kataDir(kataInfo); 
+    await kataDir(kataInfo);
+    await updateTable(kataInfo);
   } catch (error) {
     console.error("Error parsing the URL:", error);
     throw error;
