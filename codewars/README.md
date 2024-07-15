@@ -24,14 +24,23 @@ This repository is structured as follows:
 ```
 .
 ├── katas/
-│   ├── kata-1/
+│   ├── kataNameCamelCase1/
 │   │   ├── README.md
 │   │   ├── kata.js
-│   ├── kata-2/
+│   ├── kataNameCamelCase2/
 │   │   ├── README.md
 │   │   ├── kata.js
 │   └── ...
 ├── README.md
+├── 1kyu.md
+├── 2kyu.md
+├── 3kyu.md
+├── 4kyu.md
+├── 5kyu.md
+├── 6kyu.md
+├── 7kyu.md
+├── 8kyu.md
+├── beta.md
 
 ```
 
