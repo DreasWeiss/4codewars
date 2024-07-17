@@ -16,13 +16,13 @@ async function kataDir(kataInfo) {
 
   // create md file - kata's task info
   const readme = `# ${title}
-    ${kyu} kyu
-    [link to kata](${url})
-    <br/>
-    [my solution]('./kata.js')
-    <br/>
-    <br/>
-    ${text}`;
+${kyu} kyu
+[link to kata](${url})
+<br/>
+[my solution]('./kata.js')
+<br/>
+<br/>
+${text}`;
   const kataReadmePath = `${kataDirPath}/README.md`;
   createFile(kataReadmePath, readme);
 
